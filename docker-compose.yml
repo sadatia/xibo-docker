@@ -12,6 +12,8 @@ services:
             - MYSQL_RANDOM_ROOT_PASSWORD=yes
         mem_limit: 1g
         env_file: config.env
+        networks:
+            - xibo
     cms-xmr:
         image: xibosignage/xibo-xmr:release-0.7
         ports:
@@ -19,8 +21,14 @@ services:
         restart: always
         mem_limit: 256m
         env_file: config.env
+        networks:
+           - xibo
     cms-web:
         image: xibosignage/xibo-cms:release-2.1.2
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.xibo.rule=Host(`cms.example.org`)"
+          - "traefik.http.routers.xibo.entrypoints=web"
         volumes:
             - "./shared/cms/custom:/var/www/cms/custom"
             - "./shared/backup:/var/www/backup"
@@ -35,5 +43,12 @@ services:
             - XMR_HOST=cms-xmr
         env_file: config.env
         ports:
-            - "80:80"
+            - "81:80"
         mem_limit: 1g
+        networks:
+            - xibo
+            - traefik_default
+networks:
+  xibo:
+  traefik_default:
+    external: true
