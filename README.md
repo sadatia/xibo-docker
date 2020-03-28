@@ -8,9 +8,11 @@ This repository holds the docker container definitions for Xibo and the docker-c
 configuration, which is used to bootstrap, start, stop and destroy the installation.
 
 ## Installation
-Full installation instructions for supported use of these containers can be
-found in the [Xibo
-Manual](http://xibo.org.uk/manual-tempel/en/install_cms.html)
+First confirm that your traefik is running. The port 8082 is free. It that port is occupied by other app than change the port in docker-compose.yml file
+## Running docker-compose
+To run with the automation provided by docker-compose. 
+use the command:
+      docker-compose up -d
 
 ## Directory structure
 
@@ -36,15 +38,5 @@ Data folders for the Xibo installation.
    on the same webserver go in `/shared/cms/web/userscripts`. They will then
    be available to you at `http://localhost/userscripts/`
 
-## Running without docker-compose
-If you have your own docker environment you may want to run without the
-automation provided by docker-compose. If this is the case you will be responsible
-for pulling the docker containers, starting them and manually installing Xibo.
 
 
-## Reporting problems
-
-Support requests can be reported on the [Xibo Community
-Forum](https://community.xibo.org.uk/). Verified, re-producable bugs with this
-repository can be reported in the [Xibo parent
-repository](https://github.com/xibosignage/xibo/issues).
