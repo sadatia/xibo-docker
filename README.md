@@ -1,4 +1,4 @@
-# Xibo Docker
+# Xibo Docker behind the Traefik proxy
 
 [Docker](https://docker.com/) is an application to package and run any
 application in a pre-configured container making it much easier to deploy a Xibo
