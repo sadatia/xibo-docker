@@ -5,30 +5,26 @@ services:
         image: mysql:5.6
         volumes:
             - "./shared/db:/var/lib/mysql"
-        restart: always
         environment:
             - MYSQL_DATABASE=cms
             - MYSQL_USER=cms
             - MYSQL_RANDOM_ROOT_PASSWORD=yes
         mem_limit: 1g
         env_file: config.env
+        restart: always
         networks:
-            - xibo
+            - default
     cms-xmr:
-        image: xibosignage/xibo-xmr:release-0.7
+        image: xibosignage/xibo-xmr:release-0.8
         ports:
             - "9505:9505"
         restart: always
         mem_limit: 256m
         env_file: config.env
         networks:
-           - xibo
+            - default
     cms-web:
-        image: xibosignage/xibo-cms:release-2.1.2
-        labels:
-          - "traefik.enable=true"
-          - "traefik.http.routers.xibo.rule=Host(`cms.example.org`)"
-          - "traefik.http.routers.xibo.entrypoints=web"
+        image: xibosignage/xibo-cms:release-2.3.2
         volumes:
             - "./shared/cms/custom:/var/www/cms/custom"
             - "./shared/backup:/var/www/backup"
@@ -39,16 +35,26 @@ services:
         links:
             - cms-db:mysql
             - cms-xmr:50001
+        labels:
+            - traefik.http.routers.cms-web.rule=Host(`signage.docker.sadatia.com`)
+            - traefik.enable=true
+            - traefik.docker.network=proxy_default
         environment:
             - XMR_HOST=cms-xmr
         env_file: config.env
-        ports:
-            - "81:80"
-        mem_limit: 1g
         networks:
-            - xibo
-            - traefik_default
+            - proxy_default
+            - default
+        ports:
+            - "8082:80"
+        mem_limit: 1g
+    cms-quickchart:
+      image: ianw/quickchart
+            restart: always
+      networks:
+            - default
 networks:
-  xibo:
-  traefik_default:
-    external: true
+    proxy_default:
+       external: true
+    default:
+
